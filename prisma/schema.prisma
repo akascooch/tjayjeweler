@@ -63,11 +63,15 @@ model InventoryReservation {
 }
 
 model Order {
-  id         String      @id @default(cuid())
-  status     OrderStatus @default(PENDING)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  items      OrderItem[]
+  id              String      @id @default(cuid())
+  status          OrderStatus @default(PENDING)
+  currency        String      @default("IRT")
+  payment_gateway String?
+  tracking_code   String?     @unique
+  paid_at         DateTime?
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+  items           OrderItem[]
 }
 
 model OrderItem {
