@@ -1,10 +1,13 @@
-import { CatalogPage } from "../catalog-page";
+import { CategoryCatalog } from "@/components/category-catalog";
+
+export const dynamic = "force-dynamic";
 
 export default function RingsPage() {
   return (
-    <CatalogPage
+    <CategoryCatalog
+      slug="rings"
       title="Rings"
-      body="Sterling signet rings. Sizes and weights are listed with each piece."
+      intro="Sterling signet rings. Sizes and weights are listed with each piece."
     />
   );
 }

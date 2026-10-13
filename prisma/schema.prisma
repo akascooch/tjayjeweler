@@ -39,7 +39,8 @@ model Category {
   id          String    @id @default(cuid())
   name        String
   slug        String    @unique
-  description String
+  description String?
+  sort_order  Int       @default(0)
   products    Product[]
 }
 
@@ -49,10 +50,13 @@ model Product {
   category    Category         @relation(fields: [category_id], references: [id], onDelete: Restrict)
   title       String
   slug        String           @unique
-  description String
+  description String?
   /// Alloy code such as 925.
   purity      String
   base_weight Decimal          @db.Decimal(10, 3)
+  is_visible  Boolean          @default(true)
+  show_price  Boolean          @default(true)
+  sort_order  Int              @default(0)
   status      ProductStatus    @default(DRAFT)
   created_at  DateTime         @default(now())
   updated_at  DateTime         @updatedAt
@@ -60,6 +64,7 @@ model Product {
   images      ProductImage[]
 
   @@index([category_id])
+  @@index([is_visible, status])
 }
 
 model ProductImage {
@@ -67,26 +72,28 @@ model ProductImage {
   product_id String
   product    Product @relation(fields: [product_id], references: [id], onDelete: Restrict)
   url        String
-  alt_text   String
+  alt_text   String?
   is_primary Boolean @default(false)
+  sort_order Int     @default(0)
 
   @@index([product_id])
 }
 
 model ProductVariant {
-  id                String                 @id @default(cuid())
-  product_id        String
-  product           Product                @relation(fields: [product_id], references: [id], onDelete: Restrict)
-  sku               String                 @unique
-  ring_size         String?
-  chain_length      String?
-  additional_weight Decimal                @default(0) @db.Decimal(10, 3)
-  stock_quantity    Int                    @default(0)
-  price             Decimal                @db.Decimal(12, 2)
-  created_at        DateTime               @default(now())
-  updated_at        DateTime               @updatedAt
-  reservations      InventoryReservation[]
-  order_items       OrderItem[]
+  id                  String                 @id @default(cuid())
+  product_id          String
+  product             Product                @relation(fields: [product_id], references: [id], onDelete: Restrict)
+  sku                 String                 @unique
+  ring_size           String?
+  chain_length        String?
+  additional_weight   Decimal                @default(0) @db.Decimal(10, 3)
+  show_price_override Boolean?
+  stock_quantity      Int                    @default(0)
+  price               Decimal                @db.Decimal(12, 2)
+  created_at          DateTime               @default(now())
+  updated_at          DateTime               @updatedAt
+  reservations        InventoryReservation[]
+  order_items         OrderItem[]
 
   @@index([product_id])
 }

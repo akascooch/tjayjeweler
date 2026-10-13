@@ -19,16 +19,19 @@ const categories = [
     name: "Rings / انگشترها",
     slug: "rings",
     description: "Rings / انگشترها",
+    sort_order: 0,
   },
   {
     name: "Pendants & Chains / آویز و زنجیر",
     slug: "pendants-chains",
     description: "Pendants & Chains / آویز و زنجیر",
+    sort_order: 1,
   },
   {
     name: "Cuffs & Bracelets / دستبند",
     slug: "cuffs-bracelets",
     description: "Cuffs & Bracelets / دستبند",
+    sort_order: 2,
   },
 ] as const;
 
@@ -63,6 +66,7 @@ async function main() {
       update: {
         name: category.name,
         description: category.description,
+        sort_order: category.sort_order,
       },
       create: category,
     });
@@ -84,6 +88,9 @@ async function main() {
       purity: "925",
       base_weight: "16.500",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 0,
       category_id: rings.id,
     },
     create: {
@@ -93,6 +100,9 @@ async function main() {
       purity: "925",
       base_weight: "16.500",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 0,
       category_id: rings.id,
     },
   });
@@ -126,6 +136,9 @@ async function main() {
       purity: "925",
       base_weight: "42.000",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 1,
       category_id: chains.id,
     },
     create: {
@@ -135,6 +148,9 @@ async function main() {
       purity: "925",
       base_weight: "42.000",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 1,
       category_id: chains.id,
     },
   });
@@ -164,6 +180,9 @@ async function main() {
       purity: "925",
       base_weight: "28.000",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 2,
       category_id: cuffs.id,
     },
     create: {
@@ -173,6 +192,9 @@ async function main() {
       purity: "925",
       base_weight: "28.000",
       status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 2,
       category_id: cuffs.id,
     },
   });

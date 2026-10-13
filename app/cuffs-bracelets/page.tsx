@@ -1,10 +1,13 @@
-import { CatalogPage } from "../catalog-page";
+import { CategoryCatalog } from "@/components/category-catalog";
+
+export const dynamic = "force-dynamic";
 
 export default function CuffsPage() {
   return (
-    <CatalogPage
+    <CategoryCatalog
+      slug="cuffs-bracelets"
       title="Cuffs"
-      body="Engraved silver cuffs and bracelets."
+      intro="Engraved silver cuffs and bracelets."
     />
   );
 }
