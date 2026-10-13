@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  title       String
+  slug        String           @unique
+  description String
+  /// Alloy code such as 925.
+  purity      String
+  base_weight Decimal          @db.Decimal(10, 3)
+  status      ProductStatus    @default(DRAFT)
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+  variants    ProductVariant[]
+}
+
+model ProductVariant {
+  id                String                 @id @default(cuid())
+  product_id        String
+  product           Product                @relation(fields: [product_id], references: [id], onDelete: Restrict)
+  sku               String                 @unique
+  ring_size         String?
+  chain_length      String?
+  additional_weight Decimal                @default(0) @db.Decimal(10, 3)
+  stock_quantity    Int                    @default(0)
+  price             Decimal                @db.Decimal(12, 2)
+  created_at        DateTime               @default(now())
+  updated_at        DateTime               @updatedAt
+  reservations      InventoryReservation[]
+  order_items       OrderItem[]
+
+  @@index([product_id])
+}
+
+model InventoryReservation {
+  id         String         @id @default(cuid())
+  variant_id String
+  variant    ProductVariant @relation(fields: [variant_id], references: [id], onDelete: Restrict)
+  session_id String
+  expires_at DateTime
+  created_at DateTime       @default(now())
+
+  @@unique([variant_id, session_id])
+  @@index([expires_at])
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  status     OrderStatus @default(PENDING)
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id         String         @id @default(cuid())
+  order_id   String
+  order      Order          @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  variant_id String
+  variant    ProductVariant @relation(fields: [variant_id], references: [id], onDelete: Restrict)
+  quantity   Int
+  unit_price Decimal        @db.Decimal(12, 2)
+
+  @@index([order_id])
+  @@index([variant_id])
+}
