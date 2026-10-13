@@ -1,7 +1,25 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --animate-fade-in: fade-in 1.6s ease-out both;
+}
+
+:root {
+  --paper: #f3f0e8;
+  --ink: #121212;
+  --muted: #5e594f;
+  --line: #d9d3c7;
+  --sidebar: #ebe6dc;
+}
+
+.dark {
+  --paper: #0c0c0c;
+  --ink: #f2f2f2;
+  --muted: #a3a3a3;
+  --line: #2a2a2a;
+  --sidebar: #111111;
 }
 
 @keyframes fade-in {
@@ -17,7 +35,7 @@
 
 html,
 body {
-  background: #0a0a0a;
-  color: #c0c0c0;
+  background: var(--paper);
+  color: var(--ink);
   font-family: ui-sans-serif, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
 }

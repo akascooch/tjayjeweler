@@ -18,8 +18,35 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  phone         String?  @unique
+  email         String?  @unique
+  password_hash String?
+  name          String?
+  role          Role     @default(CUSTOMER)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  orders        Order[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String
+  products    Product[]
+}
+
 model Product {
   id          String           @id @default(cuid())
+  category_id String
+  category    Category         @relation(fields: [category_id], references: [id], onDelete: Restrict)
   title       String
   slug        String           @unique
   description String
@@ -30,6 +57,20 @@ model Product {
   created_at  DateTime         @default(now())
   updated_at  DateTime         @updatedAt
   variants    ProductVariant[]
+  images      ProductImage[]
+
+  @@index([category_id])
+}
+
+model ProductImage {
+  id         String  @id @default(cuid())
+  product_id String
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Restrict)
+  url        String
+  alt_text   String
+  is_primary Boolean @default(false)
+
+  @@index([product_id])
 }
 
 model ProductVariant {
@@ -64,6 +105,8 @@ model InventoryReservation {
 
 model Order {
   id              String      @id @default(cuid())
+  user_id         String?     @db.Uuid
+  user            User?       @relation(fields: [user_id], references: [id], onDelete: Restrict)
   status          OrderStatus @default(PENDING)
   currency        String      @default("IRT")
   payment_gateway String?
@@ -72,6 +115,8 @@ model Order {
   created_at      DateTime    @default(now())
   updated_at      DateTime    @updatedAt
   items           OrderItem[]
+
+  @@index([user_id])
 }
 
 model OrderItem {
