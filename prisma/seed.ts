@@ -215,6 +215,68 @@ async function main() {
       additional_weight: "0.000",
     },
   });
+
+  const bloodbyteDescription = [
+    "“A heart encoded in silver and sorrow, Bloodbyte is love encrypted in pain, protected by thorns, still longing to be touched.”",
+    "",
+    "“قلبی آغشته به نقره و اندوه، Bloodbyte عشقی‌ست رمزگذاری‌شده در رنج، در حصار خار، اما هنوز در حسرت لمس شدن .”",
+    "",
+    "Fully HandMade / 925 Silver",
+    "کاملا دست ساز / جنس نقره ۹۲۵",
+  ].join("\n");
+
+  const bloodbyte = await prisma.product.upsert({
+    where: { slug: "bloodbyte-necklace" },
+    update: {
+      title: "Bloodbyte Necklace / گردنبند Bloodbyte",
+      description: bloodbyteDescription,
+      purity: "925",
+      base_weight: "0.000",
+      status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 3,
+      category_id: chains.id,
+    },
+    create: {
+      title: "Bloodbyte Necklace / گردنبند Bloodbyte",
+      slug: "bloodbyte-necklace",
+      description: bloodbyteDescription,
+      purity: "925",
+      base_weight: "0.000",
+      status: "ACTIVE",
+      is_visible: true,
+      show_price: true,
+      sort_order: 3,
+      category_id: chains.id,
+    },
+  });
+
+  const bloodbyteChains = [
+    { sku: "TJ-BLOODBYTE-50", chain_length: "50cm" },
+    { sku: "TJ-BLOODBYTE-60", chain_length: "60cm" },
+  ];
+
+  for (const chain of bloodbyteChains) {
+    await prisma.productVariant.upsert({
+      where: { sku: chain.sku },
+      update: {
+        product_id: bloodbyte.id,
+        chain_length: chain.chain_length,
+        price: "0.00",
+        stock_quantity: 0,
+        additional_weight: "0.000",
+      },
+      create: {
+        product_id: bloodbyte.id,
+        sku: chain.sku,
+        chain_length: chain.chain_length,
+        price: "0.00",
+        stock_quantity: 0,
+        additional_weight: "0.000",
+      },
+    });
+  }
 }
 
 main()
