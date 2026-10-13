@@ -20,7 +20,7 @@ export function ProductGallery({ title, images }: { title: string; images: Galle
           <img
             src={current.url}
             alt={current.alt_text ?? title}
-            className="h-full w-full object-cover"
+            className="h-full w-full bg-black object-contain"
           />
         ) : (
           <div className="flex h-full items-center justify-center px-8">

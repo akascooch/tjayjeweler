@@ -33,9 +33,17 @@ export function Sidebar() {
 
   return (
     <aside className="flex w-full shrink-0 flex-col border-[var(--line)] bg-[var(--sidebar)] text-[var(--ink)] md:sticky md:top-0 md:h-dvh md:w-64 md:border-r">
-      <div className="border-b border-[var(--line)] px-5 py-6">
-        <Link href="/" className="block text-xl font-black tracking-[0.18em]">
-          TJAY JEWELER
+      <div className="border-b border-[var(--line)] px-5 py-5">
+        <Link href="/" className="inline-flex max-w-full items-center">
+          {/* Brand file is a static public asset, not a remote CMS URL. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/brand/logo.webp"
+            alt="TJAY JEWELER"
+            width={1024}
+            height={1024}
+            className="h-16 w-16 bg-black object-contain md:h-24 md:w-24"
+          />
         </Link>
       </div>
       <nav className="flex gap-4 overflow-x-auto px-5 py-4 md:flex-col md:gap-3 md:overflow-visible">
