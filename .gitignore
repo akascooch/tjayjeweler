@@ -21,6 +21,9 @@
 /build
 /dist
 
+# uploaded media (local fallback for MEDIA_ROOT)
+/.media/
+
 # misc
 .DS_Store
 Thumbs.db

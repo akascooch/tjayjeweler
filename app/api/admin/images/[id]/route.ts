@@ -2,6 +2,7 @@ import { serializeImage } from "@/lib/catalog";
 import { prisma } from "@/lib/db";
 import { isRecordId, jsonData, prismaError, requireAdmin } from "@/lib/admin";
 import { jsonError, readJson } from "@/lib/http";
+import { releaseProductMedia } from "@/lib/media";
 import { blankToNull, firstZodMessage, imagePatchSchema } from "@/lib/validators";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -18,7 +19,7 @@ export async function PATCH(request: Request, context: RouteContext) {
   const data = parsed.data;
 
   try {
-    const image = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       const current = await tx.productImage.findUnique({ where: { id } });
       if (!current) return null;
       if (data.is_primary) {
@@ -27,7 +28,7 @@ export async function PATCH(request: Request, context: RouteContext) {
           data: { is_primary: false },
         });
       }
-      return tx.productImage.update({
+      const image = await tx.productImage.update({
         where: { id },
         data: {
           ...(data.url !== undefined ? { url: data.url } : {}),
@@ -36,9 +37,11 @@ export async function PATCH(request: Request, context: RouteContext) {
           ...(data.is_primary !== undefined ? { is_primary: data.is_primary } : {}),
         },
       });
+      return { image, previousUrl: current.url };
     });
-    if (!image) return jsonError("Image not found.", 404);
-    return jsonData(serializeImage(image));
+    if (!result) return jsonError("Image not found.", 404);
+    if (result.previousUrl !== result.image.url) await releaseProductMedia(result.previousUrl);
+    return jsonData(serializeImage(result.image));
   } catch (error) {
     const known = prismaError(error, "Image not found.");
     if (known) return known;
@@ -55,7 +58,8 @@ export async function DELETE(request: Request, context: RouteContext) {
   if (!isRecordId(id)) return jsonError("Image not found.", 404);
 
   try {
-    await prisma.productImage.delete({ where: { id } });
+    const image = await prisma.productImage.delete({ where: { id } });
+    await releaseProductMedia(image.url);
     return jsonData({ ok: true });
   } catch (error) {
     const known = prismaError(error, "Image not found.");

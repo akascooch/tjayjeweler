@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { productMediaFile } from "@/lib/media-path";
 
 export const loginSchema = z.object({
   phone: z
@@ -119,7 +120,7 @@ const imageUrlSchema = z
   .string()
   .trim()
   .max(2000)
-  .refine((value) => sitePathPattern.test(value) || isHttpsUrl(value), {
+  .refine((value) => sitePathPattern.test(value) || productMediaFile(value) !== null || isHttpsUrl(value), {
     message: "Use an https:// image URL or a site path such as /images/products/piece-1.webp.",
   });
 

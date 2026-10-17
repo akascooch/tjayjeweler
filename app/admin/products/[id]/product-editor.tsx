@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type CategoryOption = { id: string; name: string };
@@ -294,11 +294,96 @@ function VariantManager({ productId, variants }: { productId: string; variants: 
   );
 }
 
+const UPLOAD_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_UPLOAD_BYTES = 15 * 1024 * 1024;
+
+function uploadImage(
+  productId: string,
+  file: File,
+  altText: string,
+  onProgress: (percent: number) => void,
+): Promise<{ ok: boolean; message?: string }> {
+  return new Promise((resolve) => {
+    const body = new FormData();
+    body.append("file", file);
+    body.append("alt_text", altText);
+
+    const request = new XMLHttpRequest();
+    request.open("POST", `/api/admin/products/${productId}/images/upload`);
+    request.responseType = "json";
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+    };
+    request.onload = () => {
+      const data = request.response as { message?: string } | null;
+      const fallback = request.status === 413 ? "The image is too large." : "Could not upload the image.";
+      resolve({ ok: request.status >= 200 && request.status < 300, message: data?.message ?? fallback });
+    };
+    request.onerror = () => resolve({ ok: false, message: "Network error. Check the connection and try again." });
+    request.send(body);
+  });
+}
+
 function ImageManager({ productId, images }: { productId: string; images: Image[] }) {
   const router = useRouter();
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [uploadAlt, setUploadAlt] = useState("");
+  const [progress, setProgress] = useState<number | null>(null);
   const [url, setUrl] = useState("");
   const [alt, setAlt] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  function clearUpload() {
+    setFile(null);
+    setPreview(null);
+    setUploadAlt("");
+    if (fileInput.current) fileInput.current.value = "";
+  }
+
+  function chooseFile(event: ChangeEvent<HTMLInputElement>) {
+    const next = event.target.files?.[0] ?? null;
+    setMessage("");
+    if (!next) {
+      clearUpload();
+      return;
+    }
+    if (!UPLOAD_TYPES.includes(next.type)) {
+      clearUpload();
+      setMessage("Choose a JPEG, PNG, or WebP image.");
+      return;
+    }
+    if (next.size > MAX_UPLOAD_BYTES) {
+      clearUpload();
+      setMessage("Images can be at most 15 MB.");
+      return;
+    }
+    setFile(next);
+    setPreview(URL.createObjectURL(next));
+  }
+
+  async function submitUpload(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!file) return;
+    setMessage("");
+    setProgress(0);
+    const result = await uploadImage(productId, file, uploadAlt, setProgress);
+    setProgress(null);
+    setMessage(result.ok ? "Image uploaded." : (result.message ?? "Could not upload the image."));
+    if (result.ok) {
+      clearUpload();
+      router.refresh();
+    }
+  }
+
+  const uploading = progress !== null;
 
   async function addImage(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -323,6 +408,7 @@ function ImageManager({ productId, images }: { productId: string; images: Image[
   }
 
   async function removeImage(id: string) {
+    if (!window.confirm("Delete this image? This cannot be undone.")) return;
     const result = await send(`/api/admin/images/${id}`, "DELETE");
     setMessage(result.ok ? "Image deleted." : (result.data?.message ?? "Could not delete the image."));
     if (result.ok) router.refresh();
@@ -334,9 +420,17 @@ function ImageManager({ productId, images }: { productId: string; images: Image[
       <ul className="mt-4 space-y-3">
         {images.map((image) => (
           <li key={image.id} className="flex flex-wrap items-center justify-between gap-3 border border-[var(--line)] p-3">
-            <span className="max-w-xl truncate text-sm">
-              {image.is_primary ? "Primary · " : ""}
-              {image.url}
+            <span className="flex min-w-0 items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image.url}
+                alt={image.alt_text ?? ""}
+                className="h-16 w-16 shrink-0 border border-[var(--line)] bg-[var(--surface)] object-contain"
+              />
+              <span className="max-w-xl truncate text-sm">
+                {image.is_primary ? "Primary · " : ""}
+                {image.url}
+              </span>
             </span>
             <span className="flex gap-2">
               {image.is_primary ? null : (
@@ -351,14 +445,77 @@ function ImageManager({ productId, images }: { productId: string; images: Image[
           </li>
         ))}
       </ul>
+
+      <form onSubmit={submitUpload} className="mt-6 border border-[var(--line)] p-4">
+        <label className={labelClass}>
+          Upload from device
+          <input
+            ref={fileInput}
+            type="file"
+            accept={UPLOAD_TYPES.join(",")}
+            onChange={chooseFile}
+            disabled={uploading}
+            className="mt-2 block w-full text-sm file:mr-4 file:min-h-10 file:border file:border-[var(--ink)] file:bg-transparent file:px-4 file:text-xs file:font-semibold file:tracking-[0.14em] file:text-[var(--ink)] file:uppercase"
+          />
+        </label>
+        <p className="mt-2 text-xs text-[var(--muted)]">JPEG, PNG, or WebP up to 15 MB. Saved as WebP.</p>
+        {preview ? (
+          <div className="mt-4 grid gap-4 sm:grid-cols-[10rem_1fr]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={preview}
+              alt="Selected image preview"
+              className="aspect-[4/5] w-40 border border-[var(--line)] bg-[var(--surface)] object-contain"
+            />
+            <div className="space-y-3">
+              <label className={labelClass}>
+                Alt text
+                <input
+                  value={uploadAlt}
+                  onChange={(event) => setUploadAlt(event.target.value)}
+                  maxLength={200}
+                  disabled={uploading}
+                  className={fieldClass}
+                />
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button className={buttonClass} type="submit" disabled={uploading}>
+                  {uploading ? "Uploading" : "Upload image"}
+                </button>
+                <button className={buttonClass} type="button" onClick={clearUpload} disabled={uploading}>
+                  Cancel
+                </button>
+              </div>
+              {uploading ? (
+                <div>
+                  <progress value={progress ?? 0} max={100} aria-label="Upload progress" className="h-2 w-full" />
+                  <p className="mt-1 text-xs text-[var(--muted)]">
+                    {progress === 100 ? "Processing…" : `Uploading ${progress}%`}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </form>
+
       <form onSubmit={addImage} className="mt-4 grid gap-3 md:grid-cols-[1fr_16rem_auto]">
-        <input value={url} onChange={(event) => setUrl(event.target.value)} placeholder="https:// URL or /images/... path" className={fieldClass} required />
-        <input value={alt} onChange={(event) => setAlt(event.target.value)} placeholder="Alt text" className={fieldClass} />
+        <input
+          value={url}
+          onChange={(event) => setUrl(event.target.value)}
+          placeholder="Or add by https:// URL or /images/... path"
+          aria-label="Image URL"
+          className={fieldClass}
+          required
+        />
+        <input value={alt} onChange={(event) => setAlt(event.target.value)} placeholder="Alt text" aria-label="Alt text" className={fieldClass} />
         <button className={buttonClass} type="submit">
           Add image
         </button>
       </form>
-      {message ? <p className="mt-3 text-sm text-[var(--muted)]">{message}</p> : null}
+      <p role="status" aria-live="polite" className="mt-3 min-h-5 text-sm text-[var(--muted)]">
+        {message}
+      </p>
     </section>
   );
 }
