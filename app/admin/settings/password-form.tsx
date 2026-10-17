@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 
 const fieldClass =
-  "mt-2 w-full border border-[var(--line)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
+  "mt-2 w-full border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
 
 export function PasswordForm() {
   const [currentPassword, setCurrentPassword] = useState("");

@@ -1,10 +1,10 @@
 "use client";
 
-import { Moon, Search, Sun, UserRound } from "lucide-react";
+import { Search, UserRound } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 
 const categories = [
   { href: "/rings", label: "Rings" },
@@ -15,13 +15,7 @@ const categories = [
 
 export function Sidebar() {
   const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   function onSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,20 +23,18 @@ export function Sidebar() {
     router.push(next ? `/search?q=${encodeURIComponent(next)}` : "/search");
   }
 
-  const isDark = mounted && resolvedTheme === "dark";
-
   return (
-    <aside className="flex w-full shrink-0 flex-col border-[var(--line)] bg-[var(--sidebar)] text-[var(--ink)] md:sticky md:top-0 md:h-dvh md:w-64 md:border-r">
+    <aside className="flex w-full shrink-0 flex-col border-b border-[var(--line)] bg-[var(--paper)] text-[var(--ink)] md:sticky md:top-0 md:h-dvh md:w-64 md:border-r md:border-b-0">
       <div className="border-b border-[var(--line)] px-5 py-5">
         <Link href="/" className="inline-flex max-w-full items-center">
-          {/* Brand file is a static public asset, not a remote CMS URL. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/brand/logo.webp"
+          <Image
+            src="/images/brand/logo.png"
             alt="TJAY JEWELER"
             width={1024}
             height={1024}
-            className="h-16 w-16 bg-black object-contain md:h-24 md:w-24"
+            priority
+            sizes="(min-width: 768px) 112px, 80px"
+            className="h-20 w-20 object-contain md:h-28 md:w-28"
           />
         </Link>
       </div>
@@ -51,14 +43,14 @@ export function Sidebar() {
           <Link
             key={category.href}
             href={category.href}
-            className="text-sm font-semibold tracking-[0.16em] uppercase hover:opacity-70"
+            className="py-1 text-sm font-semibold tracking-[0.16em] uppercase hover:opacity-70"
           >
             {category.label}
           </Link>
         ))}
       </nav>
       <form onSubmit={onSearch} className="mt-auto border-t border-[var(--line)] px-5 py-4">
-        <label className="flex items-center gap-2 border border-[var(--line)] bg-[var(--paper)] px-3 py-2">
+        <label className="flex items-center gap-2 border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 focus-within:border-white">
           <Search size={16} aria-hidden />
           <input
             value={query}
@@ -68,23 +60,13 @@ export function Sidebar() {
             className="w-full bg-transparent text-sm outline-none"
           />
         </label>
-        <div className="mt-3 flex items-center justify-between">
-          <Link
-            href="/account"
-            className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] uppercase"
-          >
-            <UserRound size={16} aria-hidden />
-            Account
-          </Link>
-          <button
-            type="button"
-            aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="inline-flex h-9 w-9 items-center justify-center border border-[var(--line)]"
-          >
-            {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-        </div>
+        <Link
+          href="/account"
+          className="mt-3 inline-flex min-h-9 items-center gap-2 text-xs font-semibold tracking-[0.16em] uppercase"
+        >
+          <UserRound size={16} aria-hidden />
+          Account
+        </Link>
       </form>
     </aside>
   );

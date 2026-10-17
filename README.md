@@ -1,6 +1,6 @@
 # tjayjeweler
 
-Coming soon site for tjayjeweler.com.
+Storefront and studio admin for tjayjeweler.com.
 
 ## Local development
 

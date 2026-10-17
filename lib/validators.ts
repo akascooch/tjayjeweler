@@ -105,13 +105,22 @@ export const variantUpdateSchema = z
     message: "Nothing to update.",
   });
 
+const sitePathPattern = /^\/images\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*\.(?:avif|gif|jpe?g|png|webp)$/i;
+
+function isHttpsUrl(value: string) {
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 const imageUrlSchema = z
   .string()
   .trim()
-  .url("Enter a full image URL.")
   .max(2000)
-  .refine((value) => value.startsWith("https://") || value.startsWith("http://"), {
-    message: "Image URL must start with http:// or https://.",
+  .refine((value) => sitePathPattern.test(value) || isHttpsUrl(value), {
+    message: "Use an https:// image URL or a site path such as /images/products/piece-1.webp.",
   });
 
 export const imageWriteSchema = z.object({

@@ -90,8 +90,13 @@ export async function visibleCatalog(where: {
   categorySlug?: string;
   productSlug?: string;
   search?: string;
+  order?: "curated" | "newest";
 }) {
   const search = where.search?.trim();
+  const orderBy =
+    where.order === "newest"
+      ? [{ created_at: "desc" as const }, { id: "desc" as const }]
+      : [{ sort_order: "asc" as const }, { title: "asc" as const }];
   const products = await prisma.product.findMany({
     where: {
       is_visible: true,
@@ -108,8 +113,18 @@ export async function visibleCatalog(where: {
           }
         : {}),
     },
-    orderBy: [{ sort_order: "asc" }, { title: "asc" }],
+    orderBy,
     include: productInclude,
   });
   return products.map(serializeProduct);
+}
+
+/** Units sold per variant, counting only orders whose payment is confirmed. */
+export async function paidUnitsByVariant() {
+  const rows = await prisma.orderItem.groupBy({
+    by: ["variant_id"],
+    where: { order: { status: "PAID" } },
+    _sum: { quantity: true },
+  });
+  return new Map(rows.map((row) => [row.variant_id, row._sum.quantity ?? 0]));
 }

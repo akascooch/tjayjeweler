@@ -40,7 +40,7 @@ export type EditorProduct = {
 };
 
 const fieldClass =
-  "mt-2 w-full border border-[var(--line)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
+  "mt-2 w-full border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
 const labelClass = "block text-xs font-semibold tracking-[0.16em] uppercase";
 const buttonClass =
   "border border-[var(--ink)] px-3 py-2 text-xs font-semibold tracking-[0.14em] uppercase disabled:opacity-50";
@@ -352,7 +352,7 @@ function ImageManager({ productId, images }: { productId: string; images: Image[
         ))}
       </ul>
       <form onSubmit={addImage} className="mt-4 grid gap-3 md:grid-cols-[1fr_16rem_auto]">
-        <input value={url} onChange={(event) => setUrl(event.target.value)} placeholder="https:// image URL" className={fieldClass} required />
+        <input value={url} onChange={(event) => setUrl(event.target.value)} placeholder="https:// URL or /images/... path" className={fieldClass} required />
         <input value={alt} onChange={(event) => setAlt(event.target.value)} placeholder="Alt text" className={fieldClass} />
         <button className={buttonClass} type="submit">
           Add image

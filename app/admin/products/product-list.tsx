@@ -77,7 +77,7 @@ export function ProductList({
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            className="mt-2 block border border-[var(--line)] bg-[var(--paper)] px-3 py-2 text-sm font-normal tracking-normal normal-case"
+            className="mt-2 block border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 text-sm font-normal tracking-normal normal-case"
           />
         </label>
         <label className="text-xs font-semibold tracking-[0.16em] uppercase">
@@ -85,7 +85,7 @@ export function ProductList({
           <select
             value={categoryId}
             onChange={(event) => setCategoryId(event.target.value)}
-            className="mt-2 block border border-[var(--line)] bg-[var(--paper)] px-3 py-2 text-sm font-normal tracking-normal normal-case"
+            className="mt-2 block border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 text-sm font-normal tracking-normal normal-case"
           >
             <option value="all">All</option>
             {categories.map((category) => (

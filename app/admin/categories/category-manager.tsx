@@ -13,7 +13,7 @@ type Category = {
 };
 
 const fieldClass =
-  "mt-2 w-full border border-[var(--line)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
+  "mt-2 w-full border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2 text-sm outline-none";
 const buttonClass =
   "border border-[var(--ink)] px-3 py-2 text-xs font-semibold tracking-[0.14em] uppercase";
 

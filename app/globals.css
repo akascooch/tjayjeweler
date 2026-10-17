@@ -1,36 +1,14 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-@theme inline {
-  --animate-fade-in: fade-in 1.6s ease-out both;
-}
-
 :root {
-  --paper: #f3f0e8;
-  --ink: #121212;
-  --muted: #5e594f;
-  --line: #d9d3c7;
-  --sidebar: #ebe6dc;
-}
-
-.dark {
+  color-scheme: dark;
   --paper: #0a0a0a;
+  --surface: #111111;
   --ink: #ffffff;
   --muted: #b5b5b5;
-  --line: #2a2a2a;
-  --sidebar: #111111;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  --line: #222222;
+  /* Form-field and control boundaries need at least 3:1 against --paper. */
+  --line-strong: #666666;
 }
 
 html,
@@ -38,4 +16,9 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-display), "Segoe UI", Tahoma, sans-serif;
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 1px solid rgb(255 255 255 / 0.5);
+  outline-offset: 2px;
 }
