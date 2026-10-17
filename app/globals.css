@@ -18,6 +18,12 @@ body {
   font-family: var(--font-display), "Segoe UI", Tahoma, sans-serif;
 }
 
+/* iOS standalone mode with a translucent status bar draws content beneath it. */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 1px solid rgb(255 255 255 / 0.5);
   outline-offset: 2px;
