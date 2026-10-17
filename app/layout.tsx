@@ -25,7 +25,14 @@ export default function RootLayout({
       <body className={`${display.variable} ${display.className} antialiased`}>
         <div className="min-h-dvh bg-[var(--paper)] text-[var(--ink)] md:flex">
           <Sidebar />
-          <div className="min-w-0 flex-1">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col md:min-h-dvh">
+            <div className="flex-1">{children}</div>
+            <footer className="border-t border-[var(--line)] px-6 py-6 md:px-12">
+              <p className="text-xs tracking-widest text-[#555555] uppercase transition-colors hover:text-white">
+                TJAY JEWELER © 2026 — Powered by Techooch
+              </p>
+            </footer>
+          </div>
         </div>
       </body>
     </html>

@@ -16,19 +16,19 @@ const bootstrapPassword = "Abcd123456A";
 
 const categories = [
   {
-    name: "Rings / انگشترها",
+    name: "RINGS",
     slug: "rings",
     description: "Rings / انگشترها",
     sort_order: 0,
   },
   {
-    name: "Pendants & Chains / آویز و زنجیر",
+    name: "PENDANTS & CHAINS",
     slug: "pendants-chains",
     description: "Pendants & Chains / آویز و زنجیر",
     sort_order: 1,
   },
   {
-    name: "Cuffs & Bracelets / دستبند",
+    name: "CUFFS & BRACELETS",
     slug: "cuffs-bracelets",
     description: "Cuffs & Bracelets / دستبند",
     sort_order: 2,
