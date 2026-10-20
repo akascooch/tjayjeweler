@@ -124,7 +124,7 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
       <div className="lg:grid lg:grid-cols-2">
         <ProductGallery title={product.title} images={product.images} />
         <div className="px-6 py-10 md:px-12 md:py-14">
-          <p className="text-xs font-semibold tracking-[0.32em] text-[var(--muted)] uppercase">
+          <p className="font-ui text-xs font-semibold tracking-[0.32em] text-[var(--muted)] uppercase">
             {product.category.name}
           </p>
           <h1 className="mt-4 text-4xl font-bold tracking-[0.14em] uppercase md:text-5xl">

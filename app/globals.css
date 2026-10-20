@@ -11,20 +11,59 @@
   --line-strong: #666666;
 }
 
+html {
+  overflow-x: clip;
+}
+
 html,
 body {
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font-display), "Segoe UI", Tahoma, sans-serif;
+  font-family: var(--font-body), "Palatino Linotype", Palatino, serif;
 }
 
-/* iOS standalone mode with a translucent status bar draws content beneath it. */
 body {
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
     env(safe-area-inset-left);
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), var(--font-body), "Palatino Linotype", Palatino, serif;
+}
+
+.font-ui,
+button,
+input,
+select,
+textarea,
+nav,
+label,
+legend,
+summary,
+dt,
+th {
+  font-family: var(--font-ui), "Segoe UI", Tahoma, sans-serif;
+}
+
+.font-black {
+  font-weight: 700;
 }
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 1px solid rgb(255 255 255 / 0.5);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

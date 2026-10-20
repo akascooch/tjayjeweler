@@ -31,12 +31,12 @@ export function ProductGrid({ products }: { products: CatalogProduct[] }) {
   }
 
   return (
-    <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="mt-10 grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {products.map((product) => {
         const image = product.images.find((item) => item.is_primary) ?? product.images[0];
         const unavailable = product.variants.length > 0 && product.variants.every((variant) => variant.stock_quantity === 0);
         return (
-          <article key={product.slug} className="flex flex-col border border-[var(--line)]">
+          <article key={product.slug} className="flex min-w-0 flex-col border border-[var(--line)] bg-[var(--surface)]">
             <Link
               href={`/products/${product.slug}`}
               tabIndex={-1}
@@ -60,7 +60,7 @@ export function ProductGrid({ products }: { products: CatalogProduct[] }) {
               )}
             </Link>
             <div className="p-5">
-              <h2 className="text-lg font-bold tracking-[0.08em] uppercase">
+              <h2 className="text-lg leading-tight font-medium tracking-[0.06em] uppercase">
                 <Link href={`/products/${product.slug}`}>{product.title}</Link>
               </h2>
               <p className="mt-3 text-sm">{productPriceCopy(product.show_price, product.variants)}</p>

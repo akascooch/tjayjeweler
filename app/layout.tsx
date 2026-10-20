@@ -1,12 +1,39 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk } from "next/font/google";
-import { Sidebar } from "@/components/sidebar";
+import localFont from "next/font/local";
+import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const display = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+const amiri = localFont({
+  src: [
+    { path: "../font/Amiri/Amiri-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../font/Amiri/Amiri-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../font/Amiri/Amiri-Italic.ttf", weight: "400", style: "italic" },
+    { path: "../font/Amiri/Amiri-BoldItalic.ttf", weight: "700", style: "italic" },
+  ],
+  variable: "--font-body",
+  display: "swap",
+});
+
+const cormorant = localFont({
+  src: [
+    { path: "../font/Cormorant_Unicase/CormorantUnicase-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../font/Cormorant_Unicase/CormorantUnicase-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../font/Cormorant_Unicase/CormorantUnicase-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "../font/Cormorant_Unicase/CormorantUnicase-Bold.ttf", weight: "700", style: "normal" },
+  ],
   variable: "--font-display",
+  display: "swap",
+});
+
+const scienceGothic = localFont({
+  src: [
+    { path: "../font/Science_Gothic/static/ScienceGothic-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../font/Science_Gothic/static/ScienceGothic-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../font/Science_Gothic/static/ScienceGothic-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "../font/Science_Gothic/static/ScienceGothic-Bold.ttf", weight: "700", style: "normal" },
+  ],
+  variable: "--font-ui",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -48,14 +75,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${display.variable} ${display.className} antialiased`}>
-        <div className="min-h-dvh bg-[var(--paper)] text-[var(--ink)] md:flex">
-          <Sidebar />
-          <div className="flex min-w-0 flex-1 flex-col md:min-h-dvh">
-            <div className="flex-1">{children}</div>
-            <footer className="border-t border-[var(--line)] px-6 py-6 md:px-12">
-              <p className="text-xs tracking-widest text-[#555555] uppercase transition-colors hover:text-white">
+    <html lang="en" className={`${amiri.variable} ${cormorant.variable} ${scienceGothic.variable}`}>
+      <body className="antialiased">
+        <div className="flex min-h-dvh min-w-0 flex-col bg-[var(--paper)] text-[var(--ink)]">
+          <SiteHeader />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="min-w-0 flex-1">{children}</div>
+            <footer className="border-t border-[var(--line)] px-4 py-6 sm:px-8">
+              <p className="font-ui text-xs tracking-[0.18em] text-[#555555] uppercase">
                 TJAY JEWELER © 2026 — Powered by Techooch
               </p>
             </footer>
