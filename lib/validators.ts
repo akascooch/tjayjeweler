@@ -1,11 +1,13 @@
 import { z } from "zod";
 import { productMediaFile } from "@/lib/media-path";
 
+export const phoneSchema = z
+  .string()
+  .trim()
+  .regex(/^0\d{10}$/, "Enter a valid mobile number.");
+
 export const loginSchema = z.object({
-  phone: z
-    .string()
-    .trim()
-    .regex(/^0\d{10}$/, "Enter a valid mobile number."),
+  phone: phoneSchema,
   password: z.string().min(1).max(128),
 });
 

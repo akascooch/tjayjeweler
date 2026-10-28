@@ -52,6 +52,31 @@ th {
   font-weight: 700;
 }
 
+.gallery-hero {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(255 255 255 / 0.05), transparent 42%),
+    var(--paper);
+}
+
+.sigil {
+  position: absolute;
+  top: 1.25rem;
+  left: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-left: -1.125rem;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.sigil::after {
+  content: "";
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 1px solid rgb(255 255 255 / 0.5);
   outline-offset: 2px;

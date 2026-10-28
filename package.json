@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

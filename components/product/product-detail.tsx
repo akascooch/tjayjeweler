@@ -120,7 +120,7 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
   }
 
   return (
-    <div className="bg-[var(--paper)] text-[var(--ink)]">
+    <main className="bg-[var(--paper)] text-[var(--ink)]">
       <div className="lg:grid lg:grid-cols-2">
         <ProductGallery title={product.title} images={product.images} />
         <div className="px-6 py-10 md:px-12 md:py-14">
@@ -222,6 +222,6 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
           {note ? <p className="mt-4 text-xs tracking-[0.16em] text-white/70 uppercase">{note}</p> : null}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

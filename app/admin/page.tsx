@@ -4,21 +4,24 @@ import { prisma } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
 export default async function AdminOverviewPage() {
-  const [products, visible, outOfStock] = await Promise.all([
+  const [products, visible, outOfStock, openRequests] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { is_visible: true, status: "ACTIVE" } }),
     prisma.productVariant.count({ where: { stock_quantity: 0 } }),
+    prisma.customRequest.count({ where: { status: "NEW" } }),
   ]);
 
   const stats = [
     { label: "Products", value: products },
     { label: "Visible", value: visible },
     { label: "Out of stock", value: outOfStock },
+    { label: "New requests", value: openRequests },
   ];
 
   const links = [
     { href: "/admin/products", label: "Products" },
     { href: "/admin/categories", label: "Categories" },
+    { href: "/admin/custom-requests", label: "Requests" },
     { href: "/admin/settings", label: "Settings" },
   ];
 

@@ -23,6 +23,17 @@ enum Role {
   ADMIN
 }
 
+enum CustomRequestKind {
+  EXISTING_MODEL
+  ORIGINAL_DESIGN
+}
+
+enum CustomRequestStatus {
+  NEW
+  REVIEWED
+  CLOSED
+}
+
 model User {
   id            String   @id @default(uuid()) @db.Uuid
   phone         String?  @unique
@@ -60,8 +71,9 @@ model Product {
   status      ProductStatus    @default(DRAFT)
   created_at  DateTime         @default(now())
   updated_at  DateTime         @updatedAt
-  variants    ProductVariant[]
-  images      ProductImage[]
+  variants         ProductVariant[]
+  images           ProductImage[]
+  custom_requests  CustomRequest[]
 
   @@index([category_id])
   @@index([is_visible, status])
@@ -108,6 +120,27 @@ model InventoryReservation {
 
   @@unique([variant_id, session_id])
   @@index([expires_at])
+}
+
+model CustomRequest {
+  id               String              @id @default(cuid())
+  kind             CustomRequestKind
+  product_id       String?
+  product          Product?            @relation(fields: [product_id], references: [id], onDelete: SetNull)
+  description      String
+  contact_name     String?
+  contact_phone    String
+  /// Private re-encoded file name. Not a public URL.
+  reference_file   String?
+  payload_hash     String              @db.Char(64)
+  idempotency_key  String              @unique @db.Uuid
+  status           CustomRequestStatus @default(NEW)
+  staff_note       String?
+  created_at       DateTime            @default(now())
+  updated_at       DateTime            @updatedAt
+
+  @@index([status, created_at])
+  @@index([product_id])
 }
 
 model Order {

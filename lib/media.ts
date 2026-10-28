@@ -27,6 +27,10 @@ function productMediaDir() {
   return path.join(mediaRoot(), "products");
 }
 
+function requestMediaDir() {
+  return path.join(mediaRoot(), "requests");
+}
+
 export function productMediaPath(file: string) {
   if (!productMediaFilePattern.test(file)) {
     throw new Error("Invalid media file name");
@@ -81,6 +85,38 @@ export async function storeProductImage(data: Buffer) {
     throw error;
   }
   return file;
+}
+
+export function requestMediaPath(file: string) {
+  if (!productMediaFilePattern.test(file)) {
+    throw new Error("Invalid media file name");
+  }
+  return path.join(requestMediaDir(), file);
+}
+
+/** Stores a customer reference image outside the release tree, under a random name. */
+export async function storeRequestImage(data: Buffer) {
+  const dir = requestMediaDir();
+  await mkdir(dir, { recursive: true, mode: 0o755 });
+
+  const file = `${randomUUID()}.webp`;
+  const temp = path.join(dir, `.upload-${randomUUID()}.tmp`);
+  try {
+    await writeFile(temp, data, { flag: "wx", mode: 0o644 });
+    await rename(temp, path.join(dir, file));
+  } catch (error) {
+    await unlink(temp).catch(() => undefined);
+    throw error;
+  }
+  return file;
+}
+
+export async function removeRequestImageFile(file: string) {
+  try {
+    await unlink(requestMediaPath(file));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
 }
 
 export async function removeProductImageFile(file: string) {
