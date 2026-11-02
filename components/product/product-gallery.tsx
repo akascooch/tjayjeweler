@@ -135,20 +135,20 @@ export function ProductGallery({ title, images }: { title: string; images: Galle
 
   return (
     <div className="min-w-0 bg-[var(--paper)]">
-      <div className="aspect-[4/5] overflow-hidden border-b border-[var(--line)] bg-[var(--surface)]">
+      <div className="aspect-[4/5] overflow-hidden border-b border-[var(--line)] bg-[var(--paper)]">
         {current ? (
           <button
             ref={triggerRef}
             type="button"
             onClick={openViewer}
             aria-label={`Enlarge ${current.alt_text ?? title}`}
-            className="block h-full w-full"
+            className="block h-full w-full bg-[var(--paper)]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={current.url} alt="" className="h-full w-full object-contain" />
           </button>
         ) : (
-          <div className="flex h-full items-center justify-center px-8">
+          <div className="flex h-full items-center justify-center bg-[var(--paper)] px-8">
             <p className="text-center text-3xl font-medium tracking-[0.12em] uppercase">{title}</p>
           </div>
         )}

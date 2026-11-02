@@ -14,8 +14,8 @@ export async function CategoryCatalog({
 
   return (
     <main className="px-6 py-16 md:px-12">
-      <h1 className="text-4xl font-black tracking-[0.14em] uppercase">{title}</h1>
-      <p className="mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">{intro}</p>
+      <h1 className="editorial-heading text-4xl font-black tracking-[0.14em] uppercase">{title}</h1>
+      <p className="editorial-lede mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">{intro}</p>
       <ProductGrid products={products} />
     </main>
   );

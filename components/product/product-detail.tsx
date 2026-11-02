@@ -124,13 +124,13 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
       <div className="lg:grid lg:grid-cols-2">
         <ProductGallery title={product.title} images={product.images} />
         <div className="px-6 py-10 md:px-12 md:py-14">
-          <p className="font-ui text-xs font-semibold tracking-[0.32em] text-[var(--muted)] uppercase">
+          <p className="font-ui editorial-heading text-xs font-semibold tracking-[0.32em] text-[var(--muted)] uppercase">
             {product.category.name}
           </p>
-          <h1 className="mt-4 text-4xl font-bold tracking-[0.14em] uppercase md:text-5xl">
+          <h1 className="editorial-heading mt-4 text-4xl font-bold tracking-[0.14em] break-words uppercase md:text-5xl">
             {product.title}
           </h1>
-          <p className="mt-6 text-lg tracking-[0.18em] uppercase">{price}</p>
+          <p className="editorial-heading mt-6 text-lg tracking-[0.18em] uppercase">{price}</p>
           {unavailable ? (
             <p className="mt-2 text-xs tracking-[0.22em] text-[var(--muted)] uppercase">{OUT_OF_STOCK}</p>
           ) : null}

@@ -53,16 +53,18 @@ export default async function Home({
     <main className="min-w-0 px-4 py-10 sm:px-8 sm:py-14">
       <section className="gallery-hero relative overflow-hidden border border-[var(--line)] px-4 py-10 sm:px-10 sm:py-16">
         <div className="sigil" aria-hidden="true" />
-        <p className="font-ui relative text-xs tracking-[0.28em] text-[var(--muted)] uppercase">Sterling silver</p>
-        <h1 className="relative mt-4 max-w-[11ch] text-4xl leading-[0.95] font-medium tracking-[0.06em] uppercase sm:max-w-none sm:text-6xl">
+        <p className="font-ui editorial-heading relative text-xs tracking-[0.28em] text-[var(--muted)] uppercase">
+          Sterling silver
+        </p>
+        <h1 className="editorial-heading relative mt-4 max-w-[11ch] text-4xl leading-[0.95] font-medium tracking-[0.06em] uppercase sm:max-w-none sm:text-6xl">
           Selected Artifacts
         </h1>
-        <p className="relative mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
+        <p className="editorial-lede relative mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
           Pieces chosen for the gallery. Order follows the studio sequence, not sales.
         </p>
         {lead ? (
           <article className="relative mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.8fr)] lg:items-end">
-            <Link href={`/products/${lead.slug}`} className="block min-w-0 bg-[var(--surface)]">
+            <Link href={`/products/${lead.slug}`} className="block min-w-0 bg-[var(--paper)]">
               {leadImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -71,7 +73,7 @@ export default async function Home({
                   className="aspect-[4/5] w-full object-contain"
                 />
               ) : (
-                <span className="flex aspect-[4/5] items-center justify-center px-6 text-center text-lg tracking-[0.12em] uppercase">
+                <span className="flex aspect-[4/5] items-center justify-center bg-[var(--paper)] px-6 text-center text-lg tracking-[0.12em] uppercase">
                   {lead.title}
                 </span>
               )}
@@ -120,7 +122,7 @@ export default async function Home({
 
       {rest.length > 0 ? (
         <section className="mt-12">
-          <h2 className="text-2xl font-medium tracking-[0.08em] uppercase">Also in the gallery</h2>
+          <h2 className="editorial-heading text-2xl font-medium tracking-[0.08em] uppercase">Also in the gallery</h2>
           <ProductGrid products={rest} />
         </section>
       ) : products.length === 0 ? (

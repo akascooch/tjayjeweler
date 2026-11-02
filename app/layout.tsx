@@ -82,7 +82,7 @@ export default function RootLayout({
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="min-w-0 flex-1">{children}</div>
             <footer className="border-t border-[var(--line)] px-4 py-6 sm:px-8">
-              <p className="font-ui text-xs tracking-[0.18em] text-[#555555] uppercase">
+              <p className="font-ui text-xs tracking-[0.18em] text-[var(--muted)] uppercase">
                 TJAY JEWELER © 2026 — Powered by Techooch
               </p>
             </footer>

@@ -26,11 +26,13 @@ export default async function CustomPage() {
 
   return (
     <main className="min-w-0 px-4 py-10 sm:px-8 sm:py-14">
-      <p className="font-ui text-xs tracking-[0.28em] text-[var(--muted)] uppercase">Studio commission</p>
-      <h1 className="mt-4 max-w-[12ch] text-4xl leading-[0.95] font-medium tracking-[0.06em] uppercase sm:max-w-none sm:text-6xl">
+      <p className="font-ui editorial-heading text-xs tracking-[0.28em] text-[var(--muted)] uppercase">
+        Studio commission
+      </p>
+      <h1 className="editorial-heading mt-4 max-w-[12ch] text-4xl leading-[0.95] font-medium tracking-[0.06em] uppercase sm:max-w-none sm:text-6xl">
         Custom request
       </h1>
-      <p className="mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
+      <p className="editorial-lede mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
         Ask the studio to modify a gallery piece or to consider a new design. The reply is a quotation, not an order
         and not a final price.
       </p>

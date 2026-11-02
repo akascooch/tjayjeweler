@@ -11,7 +11,6 @@ export function LoginPanel({ nextPath }: { nextPath: string | null }) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [googleMessage, setGoogleMessage] = useState("");
   const [pending, setPending] = useState(false);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -43,19 +42,8 @@ export function LoginPanel({ nextPath }: { nextPath: string | null }) {
     router.refresh();
   }
 
-  async function onGoogle() {
-    setGoogleMessage("");
-    const response = await fetch("/api/auth/google", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: "{}",
-    });
-    const data = (await response.json().catch(() => null)) as { message?: string } | null;
-    setGoogleMessage(data?.message ?? "Google sign-in is not configured.");
-  }
-
   return (
-    <div className="mt-10 max-w-md">
+    <div className="mt-10">
       <form onSubmit={onSubmit} className="space-y-4">
         <label className="block text-xs font-semibold tracking-[0.16em] uppercase">
           Phone
@@ -88,14 +76,6 @@ export function LoginPanel({ nextPath }: { nextPath: string | null }) {
           {pending ? "Signing in" : "Sign in"}
         </button>
       </form>
-      <button
-        type="button"
-        onClick={onGoogle}
-        className="mt-6 border border-[var(--line)] px-4 py-2 text-xs font-semibold tracking-[0.16em] uppercase"
-      >
-        Continue with Google
-      </button>
-      {googleMessage ? <p className="mt-3 text-sm text-[var(--muted)]">{googleMessage}</p> : null}
     </div>
   );
 }

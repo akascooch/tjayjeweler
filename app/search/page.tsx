@@ -13,9 +13,9 @@ export default async function SearchPage({
 
   return (
     <main className="px-6 py-16 md:px-12">
-      <h1 className="text-4xl font-black tracking-[0.14em] uppercase">Search</h1>
-      <p className="mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">
-        {query ? `Results for “${query}”.` : "Enter a search from the header."}
+      <h1 className="editorial-heading text-4xl font-black tracking-[0.14em] uppercase">Search</h1>
+      <p className="editorial-lede mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">
+        {query ? `Results for “${query}”.` : "Enter a search from the menu."}
       </p>
       {query ? <ProductGrid products={products} /> : null}
     </main>

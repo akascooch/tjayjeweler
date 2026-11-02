@@ -21,14 +21,14 @@ export default async function AccountPage({
 
   return (
     <main className="px-6 py-16 md:px-12">
-      <p className="text-xs font-semibold tracking-[0.28em] text-[var(--muted)] uppercase">
+      <p className="editorial-heading text-xs font-semibold tracking-[0.28em] text-[var(--muted)] uppercase">
         Account
       </p>
-      <h1 className="mt-3 text-4xl font-black tracking-[0.14em] uppercase">
+      <h1 className="editorial-heading mt-3 text-4xl font-black tracking-[0.14em] uppercase">
         {user ? user.name || "Member" : "Sign in"}
       </h1>
       {user ? (
-        <div className="mt-8 max-w-md">
+        <div className="mx-auto mt-8 max-w-md">
           <p className="text-sm tracking-wide text-[var(--muted)]">
             {user.phone} · {user.role === "ADMIN" ? "Admin" : "Customer"}
           </p>
@@ -46,10 +46,12 @@ export default async function AccountPage({
         </div>
       ) : (
         <>
-          <p className="mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">
-            Admins sign in with the studio phone number.
+          <p className="editorial-lede mt-6 max-w-xl text-sm tracking-wide text-[var(--muted)]">
+            Sign in with an existing studio phone number and password.
           </p>
-          <LoginPanel nextPath={nextPath} />
+          <div className="mx-auto max-w-md">
+            <LoginPanel nextPath={nextPath} />
+          </div>
         </>
       )}
     </main>

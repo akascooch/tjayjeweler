@@ -41,7 +41,7 @@ export function ProductGrid({ products }: { products: CatalogProduct[] }) {
               href={`/products/${product.slug}`}
               tabIndex={-1}
               aria-hidden
-              className="block aspect-[4/5] border-b border-[var(--line)] bg-[var(--surface)]"
+              className="block aspect-[4/5] border-b border-[var(--line)] bg-[var(--paper)]"
             >
               {image ? (
                 // Admin image URLs can be remote, so they stay outside the image optimizer.
@@ -54,12 +54,12 @@ export function ProductGrid({ products }: { products: CatalogProduct[] }) {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <span className="flex h-full items-center justify-center px-6 text-center text-lg font-bold tracking-[0.22em] uppercase">
+                <span className="flex h-full items-center justify-center bg-[var(--paper)] px-6 text-center text-lg font-bold tracking-[0.22em] uppercase">
                   {product.title}
                 </span>
               )}
             </Link>
-            <div className="p-5">
+            <div className="bg-[var(--surface)] p-5">
               <h2 className="text-lg leading-tight font-medium tracking-[0.06em] uppercase">
                 <Link href={`/products/${product.slug}`}>{product.title}</Link>
               </h2>

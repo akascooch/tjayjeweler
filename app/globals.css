@@ -77,6 +77,29 @@ th {
   border: 1px solid rgb(255 255 255 / 0.1);
 }
 
+.site-menu {
+  position: fixed;
+  inset: 0 auto 0 0;
+}
+
+.site-menu[open] {
+  display: flex;
+}
+
+.site-menu::backdrop {
+  background: rgb(0 0 0 / 0.72);
+}
+
+.editorial-heading {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.editorial-lede {
+  text-align: center;
+  margin-inline: auto;
+}
+
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 1px solid rgb(255 255 255 / 0.5);
   outline-offset: 2px;
