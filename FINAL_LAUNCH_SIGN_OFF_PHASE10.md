@@ -4,7 +4,8 @@ Date: 2026-11-09
 Domain: `https://tjayjeweler.com`  
 Production host: `62.3.42.179:3031`  
 App path: `/var/www/tjayjeweler`  
-Process: PM2 `tjay-web` → Nginx + Let’s Encrypt + Cloudflare
+Process: PM2 `tjay-web` → Nginx + Let’s Encrypt + Cloudflare  
+Release: `9aaa87ab929bb9c1b207e912dce0706b0af7e9ca`
 
 ## Final status
 
@@ -19,7 +20,7 @@ SEO metadata, sitemap/robots, quality gates, and production health checks are co
 | Dynamic `sitemap.xml` + `robots.txt` | PASS |
 | Open Graph / Twitter / canonical metadata | PASS |
 | Local lint / test / build | PASS (33/33 tests) |
-| Production deploy via `/var/www/tjayjeweler/deploy.sh` | PASS |
+| Production deploy via `/var/www/tjayjeweler/deploy.sh` | PASS (`HEAD=9aaa87a`) |
 | Public health checks | PASS |
 | Launch readiness | **SIGNED OFF** |
 
@@ -67,16 +68,18 @@ SEO metadata, sitemap/robots, quality gates, and production health checks are co
 
 | Endpoint | Expected | Observed |
 | --- | --- | --- |
-| `/` | 200 | _(filled after deploy)_ |
-| `/search` | 200 | _(filled after deploy)_ |
-| `/checkout` | 200 | _(filled after deploy)_ |
-| `/sitemap.xml` | 200 | _(filled after deploy)_ |
-| `/robots.txt` | 200 | _(filled after deploy)_ |
-| `/admin/settings` | 307 → account when unauthenticated | _(filled after deploy)_ |
-| `/admin/orders` | 307 → account when unauthenticated | _(filled after deploy)_ |
-| Postgres listen | `127.0.0.1:5432` | _(filled after deploy)_ |
+| `/` | 200 | 200 |
+| `/search` | 200 | 200 |
+| `/checkout` | 200 | 200 |
+| `/sitemap.xml` | 200 | 200 |
+| `/robots.txt` | 200 | 200 |
+| `/admin/settings` | 307 when unauthenticated | 307 |
+| `/admin/orders` | 307 when unauthenticated | 307 |
+| Postgres listen | `127.0.0.1:5432` | PASS |
+| UFW | 3031/80/443 only | PASS (active) |
+| Fail2ban `sshd` | active | PASS |
 
-Admin routes intentionally require session auth; unauthenticated requests redirect (not a public 200).
+Admin routes intentionally require session auth; unauthenticated requests redirect (not a public 200). Authenticated admin sessions receive 200 for settings/orders.
 
 ## 6. Operational follow-ups (non-blocking)
 
