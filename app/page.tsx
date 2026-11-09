@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { z } from "zod";
+import { HomePanels } from "@/components/home-panels";
 import { ProductGrid } from "@/components/product-card";
+import { ProductScroller, type ProductSlide } from "@/components/product-scroller";
 import { visibleCatalog } from "@/lib/catalog";
 import { prisma } from "@/lib/db";
-import { productPriceCopy } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -45,49 +46,20 @@ export default async function Home({
     categorySlug: category ?? undefined,
     order: sort === "newest" ? "newest" : "curated",
   });
-  const [lead, ...rest] = products;
-  const leadImage = lead?.images.find((item) => item.is_primary) ?? lead?.images[0];
-  const leadLabel = sort === "newest" ? "Most recently added" : "First in the studio sequence";
+  const slides: ProductSlide[] = products.map((product) => {
+    const image = product.images.find((item) => item.is_primary) ?? product.images[0];
+    return {
+      slug: product.slug,
+      title: product.title,
+      imageUrl: image?.url ?? null,
+      imageAlt: image?.alt_text?.trim() || product.title,
+    };
+  });
 
   return (
     <main className="min-w-0 px-4 py-10 sm:px-8 sm:py-14">
-      <section className="gallery-hero relative overflow-hidden border border-[var(--line)] px-4 py-10 sm:px-10 sm:py-16">
-        <div className="sigil" aria-hidden="true" />
-        <p className="font-ui editorial-heading relative text-xs tracking-[0.28em] text-[var(--muted)] uppercase">
-          Sterling silver
-        </p>
-        <h1 className="editorial-heading relative mt-4 max-w-[11ch] text-4xl leading-[0.95] font-medium tracking-[0.06em] uppercase sm:max-w-none sm:text-6xl">
-          Selected Artifacts
-        </h1>
-        <p className="editorial-lede relative mt-6 max-w-xl text-sm leading-7 text-[var(--muted)]">
-          Pieces chosen for the gallery. Order follows the studio sequence, not sales.
-        </p>
-        {lead ? (
-          <article className="relative mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(16rem,0.8fr)] lg:items-end">
-            <Link href={`/products/${lead.slug}`} className="block min-w-0 bg-[var(--paper)]">
-              {leadImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={leadImage.url}
-                  alt={leadImage.alt_text ?? lead.title}
-                  className="aspect-[4/5] w-full object-contain"
-                />
-              ) : (
-                <span className="flex aspect-[4/5] items-center justify-center bg-[var(--paper)] px-6 text-center text-lg tracking-[0.12em] uppercase">
-                  {lead.title}
-                </span>
-              )}
-            </Link>
-            <div className="min-w-0">
-              <p className="font-ui text-xs tracking-[0.2em] text-[var(--muted)] uppercase">{leadLabel}</p>
-              <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[0.06em] uppercase">
-                <Link href={`/products/${lead.slug}`}>{lead.title}</Link>
-              </h2>
-              <p className="mt-4 text-sm">{productPriceCopy(lead.show_price, lead.variants)}</p>
-            </div>
-          </article>
-        ) : null}
-      </section>
+      <ProductScroller products={slides} />
+      <HomePanels />
 
       <div className="mt-10 flex min-w-0 flex-col gap-6 border-y border-[var(--line)] py-6">
         <nav aria-label="Filter by category" className="flex flex-wrap gap-2">
@@ -120,14 +92,12 @@ export default async function Home({
         </nav>
       </div>
 
-      {rest.length > 0 ? (
-        <section className="mt-12">
-          <h2 className="editorial-heading text-2xl font-medium tracking-[0.08em] uppercase">Also in the gallery</h2>
-          <ProductGrid products={rest} />
-        </section>
-      ) : products.length === 0 ? (
-        <ProductGrid products={[]} />
-      ) : null}
+      <section className="mt-12" aria-labelledby="catalog-heading">
+        <h2 id="catalog-heading" className="sr-only">
+          Catalog
+        </h2>
+        <ProductGrid products={products} />
+      </section>
     </main>
   );
 }

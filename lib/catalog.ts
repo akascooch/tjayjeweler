@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { literalContains } from "@/lib/search-text";
 
 const productInclude = {
   category: { select: { id: true, name: true, slug: true } },
@@ -92,7 +93,7 @@ export async function visibleCatalog(where: {
   search?: string;
   order?: "curated" | "newest";
 }) {
-  const search = where.search?.trim();
+  const search = literalContains(where.search?.trim() ?? "");
   const orderBy =
     where.order === "newest"
       ? [{ created_at: "desc" as const }, { id: "desc" as const }]
