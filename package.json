@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts lib/search-text.test.ts lib/site-nav.test.ts lib/cart.test.ts lib/checkout.test.ts lib/store-settings.test.ts lib/orders.test.ts lib/seo.test.ts",
+    "seed:bank": "tsx scripts/seed-bank-settings.ts",
+    "smoke:order": "tsx scripts/smoke-order-cycle.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
