@@ -31,6 +31,10 @@ function requestMediaDir() {
   return path.join(mediaRoot(), "requests");
 }
 
+function receiptMediaDir() {
+  return path.join(mediaRoot(), "receipts");
+}
+
 export function productMediaPath(file: string) {
   if (!productMediaFilePattern.test(file)) {
     throw new Error("Invalid media file name");
@@ -114,6 +118,38 @@ export async function storeRequestImage(data: Buffer) {
 export async function removeRequestImageFile(file: string) {
   try {
     await unlink(requestMediaPath(file));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+}
+
+export function receiptMediaPath(file: string) {
+  if (!productMediaFilePattern.test(file)) {
+    throw new Error("Invalid media file name");
+  }
+  return path.join(receiptMediaDir(), file);
+}
+
+/** Stores a payment receipt outside the release tree, under a random name. */
+export async function storeReceiptImage(data: Buffer) {
+  const dir = receiptMediaDir();
+  await mkdir(dir, { recursive: true, mode: 0o755 });
+
+  const file = `${randomUUID()}.webp`;
+  const temp = path.join(dir, `.upload-${randomUUID()}.tmp`);
+  try {
+    await writeFile(temp, data, { flag: "wx", mode: 0o644 });
+    await rename(temp, path.join(dir, file));
+  } catch (error) {
+    await unlink(temp).catch(() => undefined);
+    throw error;
+  }
+  return file;
+}
+
+export async function removeReceiptImageFile(file: string) {
+  try {
+    await unlink(receiptMediaPath(file));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }

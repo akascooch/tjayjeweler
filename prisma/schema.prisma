@@ -17,6 +17,11 @@ enum OrderStatus {
   PAID
   FAILED
   CANCELLED
+  PENDING_VERIFICATION
+  PAYMENT_APPROVED
+  PAYMENT_REJECTED
+  PROCESSING
+  COMPLETED
 }
 
 enum Role {
@@ -144,15 +149,27 @@ model CustomRequest {
   @@index([product_id])
 }
 
+model StoreSetting {
+  id               Int      @id @default(1)
+  bank_card_number String   @default("")
+  bank_card_holder String   @default("")
+  bank_name        String   @default("")
+  updated_at       DateTime @updatedAt
+}
+
 model Order {
   id               String               @id @default(cuid())
   user_id          String?              @db.Uuid
   user             User?                @relation(fields: [user_id], references: [id], onDelete: Restrict)
   email            String?
+  phone            String?
   status           OrderStatus          @default(PENDING)
   currency         String               @default("IRT")
   total_amount     Decimal              @default(0) @db.Decimal(12, 2)
   payment_gateway  String?
+  /// Private re-encoded receipt file name. Served only to admins.
+  receipt_image    String?
+  staff_note       String?
   authority_code   String?              @unique
   ref_id           String?
   tracking_code    String?              @unique

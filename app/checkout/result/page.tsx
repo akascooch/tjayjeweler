@@ -19,19 +19,22 @@ export default async function CheckoutResultPage({
   const refId = first(params.refId);
   const amount = first(params.amount);
   const message = first(params.message);
+  const pending = status === "pending_verification";
   const paid = status === "paid";
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-8">
-      <CheckoutResultEffects paid={paid} />
-      <p className="font-ui text-xs tracking-[0.28em] text-[var(--muted)] uppercase">Payment result</p>
+      <CheckoutResultEffects paid={pending || paid} />
+      <p className="font-ui text-xs tracking-[0.28em] text-[var(--muted)] uppercase">Order result</p>
       <h1 className="editorial-heading mt-3 text-3xl font-bold tracking-[0.14em] uppercase md:text-4xl">
-        {paid ? "Payment confirmed" : "Payment not completed"}
+        {pending ? "Receipt received" : paid ? "Payment confirmed" : "Order not completed"}
       </h1>
       <p className="mt-4 text-sm leading-7 text-white/80">
-        {paid
-          ? "Thank you. Your Zarinpal payment was verified and the order is marked paid."
-          : message || "The gateway did not confirm this payment."}
+        {pending
+          ? "Thank you. Your receipt is waiting for studio verification. We will contact you after review."
+          : paid
+            ? "Payment was confirmed."
+            : message || "The order could not be completed."}
       </p>
 
       <dl className="mt-8 grid gap-3 border border-[var(--line)] px-4 py-5 text-sm">

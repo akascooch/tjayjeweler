@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts lib/search-text.test.ts lib/site-nav.test.ts lib/cart.test.ts lib/checkout.test.ts",
+    "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts lib/search-text.test.ts lib/site-nav.test.ts lib/cart.test.ts lib/checkout.test.ts lib/store-settings.test.ts lib/orders.test.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

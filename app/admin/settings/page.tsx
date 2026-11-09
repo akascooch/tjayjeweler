@@ -1,10 +1,13 @@
+import { BankSettingsForm } from "./bank-settings-form";
 import { PasswordForm } from "./password-form";
 import { getCurrentUser } from "@/lib/current-user";
+import { getBankSettings } from "@/lib/store-settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSettingsPage() {
   const user = await getCurrentUser();
+  const bank = await getBankSettings();
 
   return (
     <section>
@@ -13,6 +16,13 @@ export default async function AdminSettingsPage() {
         Signed in as {user?.name ?? "Admin"}
         {user?.phone ? ` · ${user.phone}` : ""}.
       </p>
+      <BankSettingsForm
+        initial={{
+          bank_card_number: bank.bank_card_number,
+          bank_card_holder: bank.bank_card_holder,
+          bank_name: bank.bank_name,
+        }}
+      />
       <PasswordForm />
     </section>
   );
