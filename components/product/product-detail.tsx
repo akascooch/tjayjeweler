@@ -53,7 +53,9 @@ function readList(key: string) {
 export function ProductDetail({ product }: { product: ProductDetailData }) {
   const addItem = useCartStore((state) => state.addItem);
   const hydrated = useCartStore((state) => state.hydrated);
-  const cartSkus = useCartStore((state) => state.items.map((item) => item.sku).join("\0"));
+  const items = useCartStore((state) => state.items);
+  // Derive a primitive snapshot outside the selector so getSnapshot stays referentially stable.
+  const cartSkus = useMemo(() => items.map((item) => item.sku).join("\0"), [items]);
   const chains = useMemo(() => {
     const values = product.variants
       .map((variant) => variant.chain_length)
