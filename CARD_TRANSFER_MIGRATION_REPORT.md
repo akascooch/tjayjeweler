@@ -3,7 +3,8 @@
 Date: 2026-11-09  
 Production host: `62.3.42.179:3031`  
 App path: `/var/www/tjayjeweler`  
-Process: PM2 `tjay-web`
+Process: PM2 `tjay-web`  
+Release: `872786fec6065088a67c8308d07a47c047c6e889`
 
 ## Final status
 
@@ -20,7 +21,7 @@ Customers now see live bank card settings, upload a receipt, and land in `PENDIN
 | Checkout receipt upload (`POST /api/orders`) | PASS |
 | Admin orders verification dashboard | PASS |
 | Local lint / test / build | PASS (30/30 tests) |
-| Commit + push + production deploy | PASS |
+| Commit + push + production deploy | PASS (`HOME=200`, `CHECKOUT=200`) |
 
 ## Schema
 
@@ -44,6 +45,19 @@ Receipts are re-encoded to WebP and stored under the private media root (`…/re
 - Orders queue: `/admin/orders` + detail review with receipt image
 - Approve / reject / processing / completed via `PATCH /api/admin/orders/[id]`
 - Reject restores reserved stock; approval keeps the hold and sets `paid_at`
+
+## Production deploy
+
+Executed `/var/www/tjayjeweler/deploy.sh`:
+
+| Step | Result |
+| --- | --- |
+| Pull | `017b60a` → `872786f` |
+| Migrate | `pivot_card_transfer_and_receipt` applied |
+| Build / PM2 reload | success / online |
+| Health | `HOME=200`, `CHECKOUT=200`, `/admin/orders` `307` (auth redirect) |
+| Postgres | `127.0.0.1:5432` only |
+| Receipts dir | `/var/lib/tjayjeweler/media/receipts` |
 
 ## Production follow-up
 
