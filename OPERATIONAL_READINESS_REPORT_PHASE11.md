@@ -5,6 +5,8 @@ Domain: `https://tjayjeweler.com`
 Production host: `62.3.42.179:3031`  
 App path: `/var/www/tjayjeweler`
 
+Release: `bfa49f5a9bb1cf9cb09ea0cfc646b8fa9c563993`
+
 ## Final status
 
 **PASS — operational readiness for public launch**
@@ -20,7 +22,7 @@ Bank card seed path, end-to-end card-transfer order smoke, receipt storage check
 | Receipt storage under private media root (`.webp` only) | PASS |
 | Daily DB backup + 7-day retention | PASS |
 | Local regression (`npm test`) | PASS (33/33) |
-| Production deploy + ops run | PASS |
+| Production deploy + ops run | PASS (`HEAD=bfa49f5`) |
 
 ## 1. Bank card configuration
 
@@ -70,17 +72,15 @@ gunzip -c /var/backups/tjayjeweler/backup_YYYY-MM-DD.sql.gz | psql "$PSQL_URL"
 
 ## 4. Production verification notes
 
-Filled after remote ops execution:
-
 | Check | Observed |
 | --- | --- |
-| Release HEAD | _(post-deploy)_ |
-| Bank configured (last4 / holder / bank) | _(post-deploy)_ |
-| Smoke order created | _(post-deploy)_ |
-| Receipt `.webp` count | _(post-deploy)_ |
-| Backup archive present | _(post-deploy)_ |
-| Cron installed | _(post-deploy)_ |
-| `/` and `/checkout` | _(post-deploy)_ |
+| Release HEAD | `bfa49f5` |
+| Bank configured | last4 `4455` · `TJAY JEWELER` · `Melli` |
+| Smoke order | `cmw99j78q0002ptydhln8kupv` → `PROCESSING` |
+| Receipt `.webp` count | `1` under `/var/lib/tjayjeweler/media/receipts` |
+| Backup archive | `/var/backups/tjayjeweler/backup_2026-11-09.sql.gz` (7.5 KB, `gzip -t` OK) |
+| Cron | `15 2 * * * /var/backups/tjayjeweler/backup_db.sh` |
+| `/` and `/checkout` | `200` / `200` |
 
 ## 5. Launch green light
 
