@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, KeyboardEvent, useEffect, useId, useRef, useState, type Ref } from "react";
+import { CartDrawer, CartHeaderButton } from "@/components/cart-drawer";
 import { searchQuery } from "@/lib/search-text";
 import { isSiteNavActive, shouldCloseMenuOnPath, siteNavLinks } from "@/lib/site-nav";
 
@@ -158,21 +159,24 @@ export function SiteHeader() {
           action="/search"
           method="get"
           onSubmit={onSearch}
-          className="relative z-20 ml-auto hidden w-[min(16rem,calc(50%-4.5rem))] min-w-0 sm:block"
+          className="relative z-20 ml-auto hidden w-[min(16rem,calc(50%-5.5rem))] min-w-0 sm:block"
         >
           <SearchField query={query} onQuery={setQuery} />
         </form>
-        <button
-          ref={searchToggleRef}
-          type="button"
-          onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
-          aria-expanded={searchOpen}
-          aria-controls="header-search"
-          aria-label={searchOpen ? "Close search" : "Open search"}
-          className="relative z-20 ml-auto inline-flex h-11 w-11 shrink-0 items-center justify-center border border-[var(--line-strong)] sm:hidden"
-        >
-          {searchOpen ? <X size={18} aria-hidden /> : <Search size={18} aria-hidden />}
-        </button>
+        <div className="relative z-20 ml-auto flex shrink-0 items-center gap-2 sm:ml-2">
+          <button
+            ref={searchToggleRef}
+            type="button"
+            onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+            aria-expanded={searchOpen}
+            aria-controls="header-search"
+            aria-label={searchOpen ? "Close search" : "Open search"}
+            className="inline-flex h-11 w-11 items-center justify-center border border-[var(--line-strong)] sm:hidden"
+          >
+            {searchOpen ? <X size={18} aria-hidden /> : <Search size={18} aria-hidden />}
+          </button>
+          <CartHeaderButton />
+        </div>
       </div>
 
       <form
@@ -246,6 +250,7 @@ export function SiteHeader() {
           </div>
         </div>
       </dialog>
+      <CartDrawer />
     </header>
   );
 }

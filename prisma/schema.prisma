@@ -15,6 +15,7 @@ enum ProductStatus {
 enum OrderStatus {
   PENDING
   PAID
+  FAILED
   CANCELLED
 }
 
@@ -144,19 +145,44 @@ model CustomRequest {
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  user_id         String?     @db.Uuid
-  user            User?       @relation(fields: [user_id], references: [id], onDelete: Restrict)
-  status          OrderStatus @default(PENDING)
-  currency        String      @default("IRT")
-  payment_gateway String?
-  tracking_code   String?     @unique
-  paid_at         DateTime?
-  created_at      DateTime    @default(now())
-  updated_at      DateTime    @updatedAt
-  items           OrderItem[]
+  id               String               @id @default(cuid())
+  user_id          String?              @db.Uuid
+  user             User?                @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  email            String?
+  status           OrderStatus          @default(PENDING)
+  currency         String               @default("IRT")
+  total_amount     Decimal              @default(0) @db.Decimal(12, 2)
+  payment_gateway  String?
+  authority_code   String?              @unique
+  ref_id           String?
+  tracking_code    String?              @unique
+  paid_at          DateTime?
+  created_at       DateTime             @default(now())
+  updated_at       DateTime             @updatedAt
+  items            OrderItem[]
+  transactions     PaymentTransaction[]
 
   @@index([user_id])
+  @@index([status, created_at])
+}
+
+model PaymentTransaction {
+  id           String   @id @default(cuid())
+  order_id     String
+  order        Order    @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  gateway      String
+  authority    String?
+  amount_irt   Decimal  @db.Decimal(12, 2)
+  amount_rial  Int
+  status       String
+  request_code Int?
+  verify_code  Int?
+  ref_id       String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@index([order_id])
+  @@index([authority])
 }
 
 model OrderItem {

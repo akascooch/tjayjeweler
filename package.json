@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts lib/search-text.test.ts lib/site-nav.test.ts",
+    "test": "tsx --test lib/custom-request.test.ts lib/custom-request-store.test.ts lib/search-text.test.ts lib/site-nav.test.ts lib/cart.test.ts lib/checkout.test.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -21,7 +21,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sharp": "0.35.5",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zustand": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

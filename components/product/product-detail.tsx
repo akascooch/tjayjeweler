@@ -4,6 +4,7 @@ import { Heart } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { OUT_OF_STOCK, PRICE_ON_REQUEST, variantPriceCopy } from "@/lib/pricing";
+import { useCartStore } from "@/lib/store/cart-store";
 
 type DetailVariant = {
   id: string;
@@ -32,7 +33,6 @@ export type ProductDetailData = {
   images: DetailImage[];
 };
 
-const bagKey = "tjay-bag";
 const wishKey = "tjay-wishlist";
 
 function chainLabel(chain: string) {
@@ -51,6 +51,9 @@ function readList(key: string) {
 }
 
 export function ProductDetail({ product }: { product: ProductDetailData }) {
+  const addItem = useCartStore((state) => state.addItem);
+  const hydrated = useCartStore((state) => state.hydrated);
+  const cartSkus = useCartStore((state) => state.items.map((item) => item.sku).join("\0"));
   const chains = useMemo(() => {
     const values = product.variants
       .map((variant) => variant.chain_length)
@@ -81,9 +84,9 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
   useEffect(() => {
     if (!selected) return;
     setWished(readList(wishKey).includes(selected.sku));
-    setBagged(readList(bagKey).includes(selected.sku));
+    setBagged(hydrated ? cartSkus.split("\0").includes(selected.sku) : false);
     setNote("");
-  }, [selected]);
+  }, [selected, hydrated, cartSkus]);
 
   const description = product.description?.trim() ?? "";
   const collapsed = description.length > 220 && !expanded;
@@ -92,11 +95,13 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
     ? variantPriceCopy(product.show_price, selected.show_price_override, selected.price)
     : PRICE_ON_REQUEST;
   const unavailable = !selected || selected.stock_quantity === 0;
+  const unitPrice = selected ? Number(selected.price) : 0;
+  const priceOnRequest = price === PRICE_ON_REQUEST;
 
-  function store(key: string, sku: string, present: boolean) {
-    const next = readList(key).filter((item) => item !== sku);
+  function storeWish(sku: string, present: boolean) {
+    const next = readList(wishKey).filter((item) => item !== sku);
     if (present) next.push(sku);
-    localStorage.setItem(key, JSON.stringify(next));
+    localStorage.setItem(wishKey, JSON.stringify(next));
   }
 
   function onBag() {
@@ -105,16 +110,30 @@ export function ProductDetail({ product }: { product: ProductDetailData }) {
       setNote(OUT_OF_STOCK);
       return;
     }
-    const next = !bagged;
-    store(bagKey, selected.sku, next);
-    setBagged(next);
-    setNote(next ? "Added to bag" : "Removed from bag");
+    if (priceOnRequest || !Number.isFinite(unitPrice) || unitPrice <= 0) {
+      setNote(PRICE_ON_REQUEST);
+      return;
+    }
+    addItem({
+      variantId: selected.id,
+      productSlug: product.slug,
+      title: product.title,
+      sku: selected.sku,
+      unitPriceIrt: unitPrice,
+      imageUrl: product.images[0]?.url ?? null,
+      ringSize: selected.ring_size,
+      chainLength: selected.chain_length,
+      stockQuantity: selected.stock_quantity,
+      quantity: 1,
+    });
+    setBagged(true);
+    setNote("Added to bag");
   }
 
   function onWish() {
     if (!selected) return;
     const next = !wished;
-    store(wishKey, selected.sku, next);
+    storeWish(selected.sku, next);
     setWished(next);
     setNote(next ? "Saved to wishlist" : "Removed from wishlist");
   }
