@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { CheckoutForm } from "@/components/checkout-form";
+import { publicPageMetadata } from "@/lib/seo";
 import { getPublicBankSettings } from "@/lib/store-settings";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Checkout",
+  description: "Complete your TJAY JEWELER order by card transfer and receipt upload.",
+  path: "/checkout",
+  index: false,
+});
 
 export default async function CheckoutPage() {
   const bank = await getPublicBankSettings();

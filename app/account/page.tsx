@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LoginPanel } from "./login-panel";
 import { LogoutButton } from "@/components/logout-button";
 import { getCurrentUser } from "@/lib/current-user";
+import { publicPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Account",
+  description: "Sign in to the TJAY JEWELER studio account.",
+  path: "/account",
+  index: false,
+});
 
 function safeNext(value: string | undefined) {
   if (!value || !value.startsWith("/admin")) return null;

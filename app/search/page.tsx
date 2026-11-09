@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { ProductGrid } from "@/components/product-card";
 import { visibleCatalog } from "@/lib/catalog";
 import { searchQuery } from "@/lib/search-text";
+import { publicPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Search",
+  description: "Search sterling silver rings, chains, and cuffs from TJAY JEWELER.",
+  path: "/search",
+});
 
 export default async function SearchPage({
   searchParams,

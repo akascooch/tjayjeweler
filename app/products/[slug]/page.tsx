@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ProductDetail } from "@/components/product/product-detail";
 import { visibleCatalog } from "@/lib/catalog";
+import { DEFAULT_OG_IMAGE, SITE_NAME, publicPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -15,25 +16,20 @@ const findProduct = cache(async (slug: string) => {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const product = await findProduct((await params).slug);
-  if (!product) return { title: "Not found · TJAY JEWELER" };
+  if (!product) return { title: `Not found · ${SITE_NAME}`, robots: { index: false, follow: false } };
 
-  const summary = product.description?.split("\n").find((line) => line.trim())?.trim() ?? "Sterling silver jewelry";
+  const summary =
+    product.description?.split("\n").find((line) => line.trim())?.trim() ??
+    `${product.title} in sterling silver from ${SITE_NAME}.`;
   const description = summary.length > 160 ? `${summary.slice(0, 157).trimEnd()}…` : summary;
-  const image = product.images[0];
-  const title = `${product.title} · TJAY JEWELER`;
+  const image = product.images.find((item) => item.is_primary) ?? product.images[0];
 
-  return {
-    title,
+  return publicPageMetadata({
+    title: product.title,
     description,
-    alternates: { canonical: `/products/${product.slug}` },
-    openGraph: {
-      title,
-      description,
-      url: `/products/${product.slug}`,
-      type: "website",
-      images: image ? [{ url: image.url, alt: image.alt_text ?? product.title }] : undefined,
-    },
-  };
+    path: `/products/${product.slug}`,
+    images: [image?.url ?? DEFAULT_OG_IMAGE],
+  });
 }
 
 export default async function ProductPage({ params }: PageProps) {

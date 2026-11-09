@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckoutResultEffects } from "@/components/checkout-result-effects";
+import { publicPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Order result",
+  description: "TJAY JEWELER order and payment receipt status.",
+  path: "/checkout/result",
+  index: false,
+});
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

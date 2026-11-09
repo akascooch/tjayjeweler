@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import { CustomRequestForm } from "@/components/custom/custom-request-form";
 import { visibleCatalog } from "@/lib/catalog";
 import { productPriceCopy } from "@/lib/pricing";
+import { publicPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Custom · TJAY JEWELER",
-  description: "Request a quotation for a modified catalog piece or a new sterling design.",
-};
+export const metadata: Metadata = publicPageMetadata({
+  title: "Custom Jewelry",
+  description: "Request a quotation for a modified catalog piece or an original sterling silver design from TJAY JEWELER.",
+  path: "/custom",
+});
 
 export default async function CustomPage() {
   const products = await visibleCatalog({});

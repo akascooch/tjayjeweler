@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { z } from "zod";
 import { HomePanels } from "@/components/home-panels";
@@ -5,8 +6,16 @@ import { ProductGrid } from "@/components/product-card";
 import { ProductScroller, type ProductSlide } from "@/components/product-scroller";
 import { visibleCatalog } from "@/lib/catalog";
 import { prisma } from "@/lib/db";
+import { SITE_DESCRIPTION, SITE_NAME, publicPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  path: "/",
+  absolute: true,
+});
 
 const sortSchema = z.enum(["selected", "newest"]).catch("selected");
 type Sort = z.infer<typeof sortSchema>;
