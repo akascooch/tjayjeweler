@@ -2,8 +2,8 @@
 
 import { Minus, Plus, ShoppingBag, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useRef } from "react";
-import { formatIrt, formatRial } from "@/lib/cart";
+import { useEffect, useId, useMemo, useRef } from "react";
+import { cartTotals, formatIrt, formatRial } from "@/lib/cart";
 import { useCartStore } from "@/lib/store/cart-store";
 
 export function CartDrawer() {
@@ -14,7 +14,19 @@ export function CartDrawer() {
   const setOpen = useCartStore((state) => state.setOpen);
   const removeItem = useCartStore((state) => state.removeItem);
   const setQuantity = useCartStore((state) => state.setQuantity);
-  const totals = useCartStore((state) => state.totals());
+  // Never call totals() inside a Zustand selector — it returns a new object each time and
+  // trips useSyncExternalStore into an infinite re-render (React #185).
+  const totals = useMemo(
+    () =>
+      cartTotals(
+        items.map((item) => ({
+          variantId: item.variantId,
+          quantity: item.quantity,
+          unitPriceIrt: item.unitPriceIrt,
+        })),
+      ),
+    [items],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -155,7 +167,9 @@ export function CartDrawer() {
 
 export function CartHeaderButton() {
   const hydrated = useCartStore((state) => state.hydrated);
-  const itemCount = useCartStore((state) => state.totals().itemCount);
+  const itemCount = useCartStore((state) =>
+    state.items.reduce((sum, item) => sum + (Number.isInteger(item.quantity) && item.quantity > 0 ? item.quantity : 0), 0),
+  );
   const setOpen = useCartStore((state) => state.setOpen);
   const count = hydrated ? itemCount : 0;
 
